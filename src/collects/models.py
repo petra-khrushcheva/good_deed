@@ -1,6 +1,6 @@
 from django.db import models
 
-from beneficiaries.models import Beneficiary
+from funds.models import Fund
 from core.basemodels import BaseModel
 from users.models import User
 
@@ -36,29 +36,32 @@ class Collect(BaseModel):
         null=True, verbose_name="Запланированная сумма"
     )
     image = models.ImageField(
-        verbose_name="Изображение", upload_to="/collects"
+        verbose_name="Изображение", upload_to="collects/"
     )
     completion_datetime = models.DateTimeField(
         null=True, verbose_name="Дата и время завершения"
     )
-    organizer_id = models.ForeignKey(
+    organizer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name="collects",
         verbose_name="Организатор",
     )
-    beneficiary = models.ForeignKey(
-        Beneficiary,
+    fund = models.ForeignKey(
+        Fund,
         on_delete=models.PROTECT,
         related_name="collects",
         verbose_name="Получатель",
     )
     occasion = models.CharField(
+        max_length=100,
         choices=CollectOccasion,
         verbose_name="Повод",
         default=CollectOccasion.JUST_LIKE_THAT,
     )
-    problem = models.CharField(choices=CollectProblem, verbose_name="Проблема")
+    problem = models.CharField(
+        max_length=100, choices=CollectProblem, verbose_name="Проблема"
+    )
 
     class Meta:
         ordering = ("-created_at",)
