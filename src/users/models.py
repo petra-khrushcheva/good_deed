@@ -4,4 +4,5 @@ from core.basemodels import BaseModel
 
 
 class User(BaseModel, AbstractUser):
-    pass
+    def __str__(self) -> str:
+        return self.get_full_name()
