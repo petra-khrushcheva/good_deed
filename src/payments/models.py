@@ -7,7 +7,7 @@ from core.basemodels import BaseModel
 class Payment(BaseModel):
     """Модель единовременного платежа для сбора."""
 
-    collect_id = models.ForeignKey(
+    collect = models.ForeignKey(
         Collect,
         on_delete=models.PROTECT,
         related_name="payments",
