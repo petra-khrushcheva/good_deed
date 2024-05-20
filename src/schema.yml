@@ -1,0 +1,1422 @@
+openapi: 3.0.3
+info:
+  title: Краудфандинговое приложение API
+  version: 0.0.0
+paths:
+  /auth/jwt/create/:
+    post:
+      operationId: auth_jwt_create_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /auth/jwt/refresh/:
+    post:
+      operationId: auth_jwt_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /auth/jwt/verify/:
+    post:
+      operationId: auth_jwt_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /auth/users/:
+    get:
+      operationId: auth_users_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: auth_users_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+  /auth/users/{id}/:
+    get:
+      operationId: auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: auth_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this user.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /auth/users/activation/:
+    post:
+      operationId: auth_users_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Activation'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+          description: ''
+  /auth/users/me/:
+    get:
+      operationId: auth_users_me_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: auth_users_me_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: auth_users_me_partial_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: auth_users_me_destroy
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /auth/users/resend_activation/:
+    post:
+      operationId: auth_users_resend_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_password/:
+    post:
+      operationId: auth_users_reset_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_password_confirm/:
+    post:
+      operationId: auth_users_reset_password_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirm'
+          description: ''
+  /auth/users/reset_username/:
+    post:
+      operationId: auth_users_reset_username_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_username_confirm/:
+    post:
+      operationId: auth_users_reset_username_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameResetConfirm'
+          description: ''
+  /auth/users/set_password/:
+    post:
+      operationId: auth_users_set_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPassword'
+          description: ''
+  /auth/users/set_username/:
+    post:
+      operationId: auth_users_set_username_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetUsername'
+          description: ''
+  /collects/:
+    get:
+      operationId: collects_list
+      parameters:
+      - in: query
+        name: fund
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: occasion
+        schema:
+          type: string
+          title: Повод
+          enum:
+          - День рождения
+          - Добро без повода
+          - Женское дело
+          - Повышение
+          - Просто так
+          - Рождение ребенка
+          - Свадьба
+          - Хорошая привычка
+        description: |-
+          * `Свадьба` - Wedding
+          * `День рождения` - Birthday
+          * `Добро без повода` - Kindness
+          * `Женское дело` - Women
+          * `Повышение` - Promotion
+          * `Просто так` - Just Like That
+          * `Рождение ребенка` - Baby Shower
+          * `Хорошая привычка` - Good Habit
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: problem
+        schema:
+          type: string
+          title: Проблема
+          enum:
+          - Алкоголизм и наркомания
+          - Бедность
+          - Бездомность
+          - Бездомные животные
+          - Гендерное неравенство
+          - Инвалидность
+          - Искусство и культура
+          - Права человека
+          - Психическое здоровье
+          - Сиротство
+        description: |-
+          * `Алкоголизм и наркомания` - Addiction
+          * `Бедность` - Poverty
+          * `Бездомность` - Homelessness
+          * `Гендерное неравенство` - Gender Inequality
+          * `Инвалидность` - Disability
+          * `Права человека` - Human Rights
+          * `Психическое здоровье` - Mental Health
+          * `Искусство и культура` - Culture And Art
+          * `Сиротство` - Orphanhood
+          * `Бездомные животные` - Homeless Animals
+      tags:
+      - collects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCollectReadList'
+          description: ''
+    post:
+      operationId: collects_create
+      tags:
+      - collects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CollectCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CollectCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectCreate'
+          description: ''
+  /collects/{id}/:
+    get:
+      operationId: collects_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Сбор.
+        required: true
+      tags:
+      - collects
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectRead'
+          description: ''
+    put:
+      operationId: collects_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Сбор.
+        required: true
+      tags:
+      - collects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CollectUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CollectUpdate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectUpdate'
+          description: ''
+    patch:
+      operationId: collects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Сбор.
+        required: true
+      tags:
+      - collects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCollectUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCollectUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCollectUpdate'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectUpdate'
+          description: ''
+    delete:
+      operationId: collects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Сбор.
+        required: true
+      tags:
+      - collects
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /funds/:
+    get:
+      operationId: funds_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - funds
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFundListList'
+          description: ''
+  /funds/{id}/:
+    get:
+      operationId: funds_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Фонд.
+        required: true
+      tags:
+      - funds
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fund'
+          description: ''
+  /payments/:
+    post:
+      operationId: payments_create
+      tags:
+      - payments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PaymentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PaymentCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCreate'
+          description: ''
+components:
+  schemas:
+    Activation:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - token
+      - uid
+    CollectCreate:
+      type: object
+      description: Схема для создания денежного сбора.
+      properties:
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        description:
+          type: string
+          title: Описание
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Запланированная сумма
+        image:
+          type: string
+          format: uri
+        completion_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата и время завершения
+        fund:
+          type: string
+          format: uuid
+          title: Получатель
+        occasion:
+          $ref: '#/components/schemas/CollectCreateOccasionEnum'
+        problem:
+          $ref: '#/components/schemas/ProblemEnum'
+      required:
+      - description
+      - fund
+      - image
+      - name
+      - occasion
+      - problem
+    CollectCreateOccasionEnum:
+      enum:
+      - Свадьба
+      - День рождения
+      - Добро без повода
+      - Женское дело
+      - Повышение
+      - Просто так
+      - Рождение ребенка
+      - Хорошая привычка
+      type: string
+      description: |-
+        * `Свадьба` - Свадьба
+        * `День рождения` - День рождения
+        * `Добро без повода` - Добро без повода
+        * `Женское дело` - Женское дело
+        * `Повышение` - Повышение
+        * `Просто так` - Просто так
+        * `Рождение ребенка` - Рождение ребенка
+        * `Хорошая привычка` - Хорошая привычка
+    CollectNested:
+      type: object
+      description: Схема для получения денежного сбора.
+      properties:
+        organizer:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Запланированная сумма
+        amount_collected:
+          type: integer
+        image:
+          type: string
+          format: uri
+        completion_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата и время завершения
+        occasion:
+          allOf:
+          - $ref: '#/components/schemas/OccasionEc9Enum'
+          title: Повод
+      required:
+      - amount_collected
+      - image
+      - name
+      - organizer
+    CollectRead:
+      type: object
+      description: Схема для получения денежного сбора.
+      properties:
+        organizer:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        description:
+          type: string
+          title: Описание
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Запланированная сумма
+        amount_collected:
+          type: integer
+        image:
+          type: string
+          format: uri
+        completion_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата и время завершения
+        fund:
+          $ref: '#/components/schemas/FundList'
+        occasion:
+          allOf:
+          - $ref: '#/components/schemas/OccasionEc9Enum'
+          title: Повод
+        participants_count:
+          type: integer
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentRead'
+      required:
+      - amount_collected
+      - description
+      - fund
+      - image
+      - name
+      - organizer
+      - participants_count
+      - payments
+    CollectUpdate:
+      type: object
+      description: |-
+        Схема для редактирования описания одного денежного сбора.
+        Фонд, в пользу которого проводится сбор, и повод изменять нельзя.
+      properties:
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Запланированная сумма
+        description:
+          type: string
+          title: Описание
+        image:
+          type: string
+          format: uri
+        completion_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата и время завершения
+      required:
+      - description
+      - image
+      - name
+    Fund:
+      type: object
+      description: |-
+        Схема для отображения полного описания фонда
+        со списком всех сборов в его пользу.
+      properties:
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        summary:
+          type: string
+          title: Краткое описание
+          maxLength: 300
+        description:
+          type: string
+          title: Описание
+        collects:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectNested'
+      required:
+      - collects
+      - description
+      - name
+      - summary
+    FundList:
+      type: object
+      description: Схема для отображения краткого описания фонда.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        summary:
+          type: string
+          title: Краткое описание
+          maxLength: 300
+      required:
+      - id
+      - name
+      - summary
+    OccasionEc9Enum:
+      enum:
+      - Свадьба
+      - День рождения
+      - Добро без повода
+      - Женское дело
+      - Повышение
+      - Просто так
+      - Рождение ребенка
+      - Хорошая привычка
+      type: string
+      description: |-
+        * `Свадьба` - Wedding
+        * `День рождения` - Birthday
+        * `Добро без повода` - Kindness
+        * `Женское дело` - Women
+        * `Повышение` - Promotion
+        * `Просто так` - Just Like That
+        * `Рождение ребенка` - Baby Shower
+        * `Хорошая привычка` - Good Habit
+    PaginatedCollectReadList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectRead'
+    PaginatedFundListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FundList'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PasswordResetConfirm:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+        new_password:
+          type: string
+      required:
+      - new_password
+      - token
+      - uid
+    PatchedCollectUpdate:
+      type: object
+      description: |-
+        Схема для редактирования описания одного денежного сбора.
+        Фонд, в пользу которого проводится сбор, и повод изменять нельзя.
+      properties:
+        name:
+          type: string
+          title: Название
+          maxLength: 200
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Запланированная сумма
+        description:
+          type: string
+          title: Описание
+        image:
+          type: string
+          format: uri
+        completion_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата и время завершения
+    PatchedUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+    PaymentCreate:
+      type: object
+      description: Схема для создания платежа.
+      properties:
+        collect:
+          type: string
+          format: uuid
+          title: Сбор
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Сумма платежа
+        donor_first_name:
+          type: string
+          title: Имя плательщика
+          maxLength: 100
+        donor_last_name:
+          type: string
+          title: Фамилия плательщика
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        comment:
+          type: string
+          nullable: true
+          title: Комментарий
+        hide_amount:
+          type: boolean
+          title: Скрыть сумму пожертвования
+      required:
+      - amount
+      - collect
+      - donor_first_name
+      - donor_last_name
+      - email
+    PaymentRead:
+      type: object
+      description: Схема для отображения платежа в ленте сбора.
+      properties:
+        collect:
+          type: string
+          format: uuid
+          title: Сбор
+        amount:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          title: Сумма платежа
+        donor_first_name:
+          type: string
+          title: Имя плательщика
+          maxLength: 100
+        donor_last_name:
+          type: string
+          title: Фамилия плательщика
+          maxLength: 100
+        comment:
+          type: string
+          nullable: true
+          title: Комментарий
+        hide_amount:
+          type: boolean
+          title: Скрыть сумму пожертвования
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount
+      - collect
+      - created_at
+      - donor_first_name
+      - donor_last_name
+    ProblemEnum:
+      enum:
+      - Алкоголизм и наркомания
+      - Бедность
+      - Бездомность
+      - Гендерное неравенство
+      - Инвалидность
+      - Права человека
+      - Психическое здоровье
+      - Искусство и культура
+      - Сиротство
+      - Бездомные животные
+      type: string
+      description: |-
+        * `Алкоголизм и наркомания` - Алкоголизм и наркомания
+        * `Бедность` - Бедность
+        * `Бездомность` - Бездомность
+        * `Гендерное неравенство` - Гендерное неравенство
+        * `Инвалидность` - Инвалидность
+        * `Права человека` - Права человека
+        * `Психическое здоровье` - Психическое здоровье
+        * `Искусство и культура` - Искусство и культура
+        * `Сиротство` - Сиротство
+        * `Бездомные животные` - Бездомные животные
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    SetPassword:
+      type: object
+      properties:
+        new_password:
+          type: string
+        current_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+    SetUsername:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_username:
+          type: string
+          title: Username
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+      required:
+      - current_password
+      - new_username
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+      required:
+      - id
+      - username
+    UserCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - id
+      - password
+      - username
+    UsernameResetConfirm:
+      type: object
+      properties:
+        new_username:
+          type: string
+          title: Username
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+      required:
+      - new_username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
