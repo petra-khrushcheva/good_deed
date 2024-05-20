@@ -1,3 +1,4 @@
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from ..models import Collect
@@ -7,6 +8,7 @@ class CollectNestedSerializer(serializers.ModelSerializer):
     """Схема для получения денежного сбора."""
 
     organizer = serializers.StringRelatedField(read_only=True)
+    image = Base64ImageField()
 
     class Meta:
         model = Collect
@@ -14,7 +16,6 @@ class CollectNestedSerializer(serializers.ModelSerializer):
             "organizer",
             "name",
             "amount",
-            "amount_collected",
             "image",
             "completion_datetime",
             "occasion",
