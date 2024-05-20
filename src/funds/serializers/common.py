@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
-from ..models import Fund
 from collects.serializers.nested import CollectNestedSerializer
+
+from ..models import Fund
 
 
 class FundSerializer(serializers.ModelSerializer):
