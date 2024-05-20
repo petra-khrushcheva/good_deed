@@ -3,11 +3,11 @@ version: "3.9"
 services:
 
   db:
-    container_name: postgresql_db
+    container_name: postgres
     image: postgres:14
     restart: always
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -27,15 +27,20 @@ services:
   backend:
     container_name: backend
     build: .
-    image: ... # provide image name
+    image: crowdfunding_app_drf
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - DB_ENGINE=${DB_ENGINE}
       - DB_NAME=${DB_NAME}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT} 
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
     command: bash -c "cd src && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./src:/app/src
@@ -45,6 +50,23 @@ services:
       - redis
       - db
     restart: always
+
+
+  celery:
+    container_name: celery
+    build: .
+    command: bash -c "cd src && celery --app=core worker -l INFO"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT} 
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+    depends_on:
+      - redis
+      - backend
 
 # volumes:
 #   pgdata:
