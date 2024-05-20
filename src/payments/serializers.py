@@ -25,9 +25,9 @@ class PaymentReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = [
-            "collect",
             "amount",
-            "donor_full_name",
+            "donor_first_name",
+            "donor_last_name",
             "comment",
             "hide_amount",
             "created_at",
