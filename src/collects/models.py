@@ -1,7 +1,7 @@
 from django.db import models
 
-from funds.models import Fund
 from core.basemodels import BaseModel
+from funds.models import Fund
 from users.models import User
 
 
@@ -33,13 +33,13 @@ class Collect(BaseModel):
     name = models.CharField(max_length=200, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
     amount = models.IntegerField(
-        null=True, verbose_name="Запланированная сумма"
+        blank=True, null=True, verbose_name="Запланированная сумма"
     )
     image = models.ImageField(
         verbose_name="Изображение", upload_to="collects/"
     )
     completion_datetime = models.DateTimeField(
-        null=True, verbose_name="Дата и время завершения"
+        blank=True, null=True, verbose_name="Дата и время завершения"
     )
     organizer = models.ForeignKey(
         User,
