@@ -1,0 +1,1 @@
+![Workflow badge](https://github.com/petra-khrushcheva/${{ github.event.repository.name }}/actions/workflows/main.yml/badge.svg)
