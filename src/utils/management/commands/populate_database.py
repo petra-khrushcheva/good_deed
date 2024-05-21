@@ -50,7 +50,7 @@ class CollectFactory(factory.django.DjangoModelFactory):
     amount = factory.LazyAttribute(
         lambda _: FAKE.pyint(min_value=1000, max_value=1000000)
     )
-    image = "http://127.0.0.1:8000/media/test_image_for_faker.png"
+    image = "media/test_image_for_faker.png"
     completion_datetime = factory.LazyAttribute(
         lambda _: FAKE.date_time_this_year(
             tzinfo=timezone.utc, before_now=False, after_now=True
