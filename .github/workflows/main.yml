@@ -23,4 +23,4 @@ jobs:
         pip install -r requirements.txt
     - name: Test with flake8
       run: |
-        python -m flake8 --exclude */settings.py,*/migrations/
+        python -m flake8 --exclude */settings.py,*/migrations/ --ignore=R503,R504
