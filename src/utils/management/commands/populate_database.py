@@ -1,7 +1,8 @@
 from datetime import timezone
-import faker
+
 import factory
 import factory.django
+import faker
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
