@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 from core.basemodels import BaseModel
 from funds.models import Fund
-from users.models import User
+
+User = get_user_model()
 
 
 class Collect(BaseModel):
