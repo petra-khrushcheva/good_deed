@@ -13,7 +13,9 @@ class Payment(BaseModel):
         related_name="payments",
         verbose_name="Сбор",
     )
-    amount = models.IntegerField(verbose_name="Сумма платежа")
+    amount = models.DecimalField(
+        max_digits=9, decimal_places=2, verbose_name="Сумма платежа"
+    )
     donor_first_name = models.CharField(
         max_length=100, verbose_name="Имя плательщика"
     )

@@ -35,7 +35,7 @@ class CollectReadSerializer(serializers.ModelSerializer):
     fund = FundListSerializer()
     organizer = serializers.StringRelatedField(read_only=True)
     image = Base64ImageField()
-    amount_collected = serializers.IntegerField()
+    amount_collected = serializers.DecimalField(max_digits=9, decimal_places=2)
     participants_count = serializers.IntegerField()
 
     class Meta:

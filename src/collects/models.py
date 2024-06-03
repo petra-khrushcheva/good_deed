@@ -34,8 +34,12 @@ class Collect(BaseModel):
 
     name = models.CharField(max_length=200, verbose_name="Название")
     description = models.TextField(verbose_name="Описание")
-    amount = models.IntegerField(
-        blank=True, null=True, verbose_name="Запланированная сумма"
+    amount = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Запланированная сумма",
     )
     image = models.ImageField(
         verbose_name="Изображение", upload_to="collects/"
